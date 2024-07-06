@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "blue.beaming.soar.injected.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "MixinEntityTrackerEntry",
+    "MixinPlayerEntity"
+  ],
+  "client": [
+    "MixinCamera",
+    "MixinClientPlayerEntity",
+    "MixinClientPlayerInteractionManager",
+    "MixinEntityRenderer",
+    "MixinLivingEntityRenderer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

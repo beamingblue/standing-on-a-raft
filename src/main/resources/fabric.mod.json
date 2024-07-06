@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "standing-on-a-raft",
+  "version": "${version}",
+  "name": "Standing on a Raft!",
+  "description": "Stand on a raft!",
+  "authors": ["BeamingBlue"],
+  "contact": {
+    "repo": "https://github.com/beamingblue/standing_on_a_raft"
+  },
+  "license": "MIT",
+  "icon": "assets/standing_on_a_raft/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "blue.beaming.soar.client.StandingOnARaftClient"
+    ],
+    "main": [
+      "blue.beaming.soar.StandingOnARaft"
+    ]
+  },
+  "mixins": [
+    "standing_on_a_raft.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
