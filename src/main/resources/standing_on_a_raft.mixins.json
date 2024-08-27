@@ -10,7 +10,6 @@
   "client": [
     "MixinCamera",
     "MixinClientPlayerEntity",
-    "MixinClientPlayerInteractionManager",
     "MixinEntityRenderer",
     "MixinLivingEntityRenderer"
   ],

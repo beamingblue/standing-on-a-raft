@@ -1,8 +1,10 @@
 package blue.beaming.soar.injected.interfaces;
 
 public interface SoaRPlayer {
-    boolean soar$standing();
+    boolean soar$isStanding();
     void soar$setStanding(boolean standing);
-    boolean soar$standingOnRaft();
-    boolean soar$onRaft();
+
+    boolean soar$onMountAndStanding();
+
+    float soar$ridingSittingDifference();
 }

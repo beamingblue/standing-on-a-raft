@@ -18,7 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
     @Inject(method = "startTracking", at = @At("TAIL"))
     private void addStandingPayload(ServerPlayerEntity player, CallbackInfo ci) {
-        if (!(this.entity instanceof SoaRPlayer soar)) return;
-        ServerPlayNetworking.send(player, new StandingS2CPayload(this.entity.getId(), soar.soar$standing()));
+        if (this.entity instanceof SoaRPlayer soar) {
+            ServerPlayNetworking.send(player, new StandingS2CPayload(this.entity.getId(), soar.soar$isStanding()));
+        }
     }
 }
