@@ -1,5 +1,6 @@
 # Standing on a Raft!
-_Minecraft: Java Edition / 1.21_
+
+_Minecraft: Java Edition / 1.20_
 
 ---
 

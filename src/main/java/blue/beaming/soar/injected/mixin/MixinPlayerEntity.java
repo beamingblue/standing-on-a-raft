@@ -3,7 +3,6 @@ package blue.beaming.soar.injected.mixin;
 import blue.beaming.soar.injected.interfaces.SoaRPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -22,13 +21,10 @@ import org.spongepowered.asm.mixin.Unique;
         return ((Entity) (Object) this).hasVehicle() && this.standing;
     }
 
-    @SuppressWarnings({"ConstantConditions", "UnreachableCode"}) @Override public float soar$ridingSittingDifference() {
+    @SuppressWarnings("ConstantConditions") @Override public float soar$ridingSittingDifference() {
         if (!((Entity) (Object) this).hasVehicle()) return 0;
-
-        Entity vehicle = ((Entity) (Object) this).getVehicle();
-
-        Vec3d vehicleAttachment = ((Entity) (Object) this).getVehicleAttachmentPos(vehicle);
-
-        return (float) (vehicleAttachment.y);
+        return 9 / 16f; // :(
+        // the version without entity attachments has to use magic numbers, and this won't be consistent. Sorry!
+        // this one simply raises the legs. Should another mod change the player model, this WILL break.
     }
 }

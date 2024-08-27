@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
     @SuppressWarnings("UnreachableCode") @Inject(method = "renderLabelIfPresent",
                                                  at = @At(value = "INVOKE",
                                                           target = "Lnet/minecraft/client/util/math/MatrixStack;peek()Lnet/minecraft/client/util/math/MatrixStack$Entry;"))
-    private void pushLabelUp(Entity entity, Text j1, MatrixStack stack, VertexConsumerProvider j2, int j3, float j4, CallbackInfo ci) {
+    private void pushLabelUp(Entity entity, Text j1, MatrixStack stack, VertexConsumerProvider j2, int j3, CallbackInfo ci) {
         if ((EntityRenderer<?>) (Object) this instanceof PlayerEntityRenderer && entity instanceof SoaRPlayer player
                 && player.soar$onMountAndStanding()) {
             stack.translate(0, player.soar$ridingSittingDifference() * (1 / -0.025f), 0); // Sorry, magic numbers are at it again 😟

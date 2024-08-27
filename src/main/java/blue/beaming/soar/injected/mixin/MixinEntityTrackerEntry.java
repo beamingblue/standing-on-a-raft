@@ -1,7 +1,7 @@
 package blue.beaming.soar.injected.mixin;
 
+import blue.beaming.soar.StandingOnARaft;
 import blue.beaming.soar.injected.interfaces.SoaRPlayer;
-import blue.beaming.soar.networking.StandingS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.EntityTrackerEntry;
@@ -19,7 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
     @Inject(method = "startTracking", at = @At("TAIL"))
     private void addStandingPayload(ServerPlayerEntity player, CallbackInfo ci) {
         if (this.entity instanceof SoaRPlayer soar) {
-            ServerPlayNetworking.send(player, new StandingS2CPayload(this.entity.getId(), soar.soar$isStanding()));
+            ServerPlayNetworking.send(player, StandingOnARaft.STANDING_S2C_PAYLOAD_ID, StandingOnARaft.ofS2C(this.entity.getId(),
+                                                                                                             soar.soar$isStanding()));
         }
     }
 }

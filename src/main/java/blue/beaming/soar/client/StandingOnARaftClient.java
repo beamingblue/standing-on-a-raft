@@ -1,8 +1,7 @@
 package blue.beaming.soar.client;
 
+import blue.beaming.soar.StandingOnARaft;
 import blue.beaming.soar.injected.interfaces.SoaRPlayer;
-import blue.beaming.soar.networking.StandingC2SPayload;
-import blue.beaming.soar.networking.StandingS2CPayload;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
@@ -58,7 +57,7 @@ public class StandingOnARaftClient implements ClientModInitializer {
         standingByMountType.put(type, standing);
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         ((SoaRPlayer) player).soar$setStanding(standing);
-        ClientPlayNetworking.send(new StandingC2SPayload(standing));
+        ClientPlayNetworking.send(StandingOnARaft.STANDING_C2S_PAYLOAD_ID, StandingOnARaft.ofC2S(standing));
     }
 
     public static void toggleStanding(EntityType<?> type) {
@@ -72,7 +71,9 @@ public class StandingOnARaftClient implements ClientModInitializer {
             } else {
                 FileReader reader = new FileReader(configurationFile);
                 configuration = Configuration.CODEC.parse(JsonOps.INSTANCE, JsonHelper.deserialize(reader))
-                                                   .getOrThrow(JsonParseException::new);
+                                                   .getOrThrow(false, msg -> {
+                                                       throw new JsonParseException(msg);
+                                                   });
                 reader.close();
             }
         } catch (JsonParseException | IOException e) {
@@ -83,7 +84,9 @@ public class StandingOnARaftClient implements ClientModInitializer {
     private static void saveConfiguration() {
         try (FileWriter writer = new FileWriter(configurationFile)) {
             writer.write(Configuration.CODEC.encodeStart(JsonOps.INSTANCE, configuration)
-                                            .getOrThrow(JsonParseException::new)
+                                            .getOrThrow(false, msg -> {
+                                                throw new JsonParseException(msg);
+                                            })
                                             .toString());
         } catch (JsonParseException | IOException e) {
             LOG.warn("Cannot write to configuration file - won't be saving", e);
@@ -97,13 +100,15 @@ public class StandingOnARaftClient implements ClientModInitializer {
                 toggleStanding(client.player.getVehicle().getType());
             }
         });
-        ClientPlayNetworking.registerGlobalReceiver(StandingS2CPayload.PAYLOAD_ID, (payload, context) -> {
-            context.client().execute(() -> {
-                ClientWorld world = context.client().world;
+        ClientPlayNetworking.registerGlobalReceiver(StandingOnARaft.STANDING_S2C_PAYLOAD_ID, (client, handler, packetByteBuf, sender) -> {
+            int id = packetByteBuf.readInt();
+            boolean standing = packetByteBuf.readBoolean();
+
+            client.execute(() -> {
+                ClientWorld world = client.world;
                 if (world == null) return;
-                Entity entity = world.getEntityById(payload.id());
-                if (!(entity instanceof SoaRPlayer player)) return;
-                player.soar$setStanding(payload.standing());
+                Entity entity = world.getEntityById(id);
+                if (entity instanceof SoaRPlayer player) player.soar$setStanding(standing);
             });
         });
         readConfiguration();
