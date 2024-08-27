@@ -14,13 +14,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(LivingEntityRenderer.class) public class MixinLivingEntityRenderer {
     @Redirect(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
               at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/model/EntityModel;riding:Z", opcode = Opcodes.PUTFIELD))
-    private void dontSetSittingIfNotAllowed(EntityModel instance, boolean value, @Local(argsOnly = true) LivingEntity entity,
+    private void dontSetSittingIfNotAllowed(EntityModel model, boolean value, @Local(argsOnly = true) LivingEntity entity,
                                             @Local(argsOnly = true) MatrixStack stack) {
-        if (entity instanceof SoaRPlayer player && player.soar$standingOnRaft()) {
-            instance.riding = false;
-            stack.translate(0, entity.getVehicle().getHeight(), 0);
+        if (entity instanceof SoaRPlayer player && player.soar$onMountAndStanding()) {
+            model.riding = false;
+            stack.translate(0, player.soar$ridingSittingDifference(), 0);
         } else {
-            instance.riding = value;
+            model.riding = value;
         }
     }
 }

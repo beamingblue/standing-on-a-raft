@@ -2,16 +2,15 @@ package blue.beaming.soar.injected.mixin;
 
 import blue.beaming.soar.injected.interfaces.SoaRPlayer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.vehicle.BoatEntity;
+import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(PlayerEntity.class) public class MixinPlayerEntity implements SoaRPlayer {
     @Unique private boolean standing = false;
 
-    @Override public boolean soar$standing() {
+    @Override public boolean soar$isStanding() {
         return this.standing;
     }
 
@@ -19,13 +18,17 @@ import org.spongepowered.asm.mixin.Unique;
         this.standing = standing;
     }
 
-    @Override public boolean soar$standingOnRaft() {
-        if (!this.standing) return false;
-        return soar$onRaft();
+    @SuppressWarnings("UnreachableCode") @Override public boolean soar$onMountAndStanding() {
+        return ((Entity) (Object) this).hasVehicle() && this.standing;
     }
 
-    @Override public boolean soar$onRaft() {
+    @SuppressWarnings({"ConstantConditions", "UnreachableCode"}) @Override public float soar$ridingSittingDifference() {
+        if (!((Entity) (Object) this).hasVehicle()) return 0;
+
         Entity vehicle = ((Entity) (Object) this).getVehicle();
-        return vehicle != null && (vehicle.getType() == EntityType.BOAT || vehicle.getType() == EntityType.CHEST_BOAT) && ((BoatEntity) vehicle).getVariant() == BoatEntity.Type.BAMBOO;
+
+        Vec3d vehicleAttachment = ((Entity) (Object) this).getVehicleAttachmentPos(vehicle);
+
+        return (float) (vehicleAttachment.y);
     }
 }
