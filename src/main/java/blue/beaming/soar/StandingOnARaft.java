@@ -20,8 +20,8 @@ public class StandingOnARaft implements ModInitializer {
         PayloadTypeRegistry.playC2S().register(StandingC2SPayload.PAYLOAD_ID, StandingC2SPayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(StandingC2SPayload.PAYLOAD_ID, (payload, context) -> {
+            ((SoaRPlayer) context.player()).soar$setStanding(payload.standing());
             for (ServerPlayerEntity player : PlayerLookup.tracking(context.player())) {
-                ((SoaRPlayer) context.player()).soar$setStanding(payload.standing());
                 ServerPlayNetworking.send(player, new StandingS2CPayload(context.player().getId(), payload.standing()));
             }
         });
